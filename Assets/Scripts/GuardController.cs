@@ -27,7 +27,8 @@ public class GuardController : MonoBehaviour
         _currentPoint += _dir;
         if (loopPath)
         {
-            if (_currentPoint >= points.Count)
+            _dir = 1;
+            if (_currentPoint < 0 || _currentPoint >= points.Count)
                 _currentPoint = 0;
         }
         else
