@@ -16,7 +16,7 @@ public class TargetDetector : MonoBehaviour
         _target = GameObject.FindGameObjectWithTag(targetTag).transform;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (Vector3.Distance(transform.position, _target.position) < distance)
         {
