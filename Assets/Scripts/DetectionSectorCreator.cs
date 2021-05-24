@@ -18,7 +18,7 @@ public class DetectionSectorCreator : MonoBehaviour
     void Update()
     {
         var currentAngle = _targetDetector.angle;
-        var currentDistance = _targetDetector.distance;
+        var currentDistance = _targetDetector.maxDistance;
 
         if (!Mathf.Approximately(currentAngle, _lastAngle) ||
             currentDistance != _lastDistance)
@@ -35,6 +35,7 @@ public class DetectionSectorCreator : MonoBehaviour
         var triangles = new List<int>();
         var uvs = new List<Vector2>();
 
+        angle /= 2;
         var right = GetRotation(Vector3.forward, angle) * distance;
         var left = GetRotation(Vector3.forward, angle) * distance;
         var from = left;

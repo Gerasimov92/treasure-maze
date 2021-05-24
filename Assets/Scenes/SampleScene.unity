@@ -815,9 +815,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetTag: Player
-  rays: 6
-  distance: 15
-  angle: 20
+  rayCount: 6
+  maxDistance: 15
+  angle: 40
   offset: {x: 0, y: 0, z: 0}
 --- !u!195 &1241844814
 NavMeshAgent:

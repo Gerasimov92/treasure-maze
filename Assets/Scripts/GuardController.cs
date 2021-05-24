@@ -5,8 +5,9 @@ using UnityEngine.AI;
 
 public class GuardController : MonoBehaviour
 {
-    public bool loopPath;
-    public List<Transform> points;
+    [SerializeField] private bool loopPath;
+    [SerializeField] private List<Transform> points;
+
     private NavMeshAgent _agent;
     private int _currentPoint = 0;
     private int _dir = 1;

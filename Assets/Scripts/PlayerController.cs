@@ -3,14 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, ITarget
 {
-    [SerializeField] private float moveSpeed;
+    [SerializeField] private float moveSpeed = 10;
     [SerializeField] private GameObject body;
     [SerializeField] private GameObject camo;
 
     private Vector2 _moveVector;
     private bool _isHidden;
+    private float _visualDetectionRatio = 1;
 
     void Update()
     {
@@ -43,10 +44,16 @@ public class PlayerController : MonoBehaviour
         transform.position += move * scaledMoveSpeed;
     }
 
-    private void Hide(bool value)
+    private void Hide(bool hidden)
     {
-        _isHidden = value;
-        body.SetActive(!value);
-        camo.SetActive(value);
+        _isHidden = hidden;
+        body.SetActive(!hidden);
+        camo.SetActive(hidden);
+        _visualDetectionRatio = hidden ? 0.1f : 1.0f;
+    }
+
+    public float VisualDetectionDistance(float nominalDistance)
+    {
+        return nominalDistance * _visualDetectionRatio;
     }
 }
