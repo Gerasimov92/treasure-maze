@@ -9,9 +9,15 @@ public class PlayerController : MonoBehaviour, ITarget
     [SerializeField] private GameObject body;
     [SerializeField] private GameObject camo;
 
+    private GameController _gameController;
     private Vector2 _moveVector;
     private bool _isHidden;
     private float _visualDetectionRatio = 1;
+
+    void Start()
+    {
+        _gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+    }
 
     void Update()
     {
@@ -55,5 +61,11 @@ public class PlayerController : MonoBehaviour, ITarget
     public float VisualDetectionDistance(float nominalDistance)
     {
         return nominalDistance * _visualDetectionRatio;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Treasure"))
+            _gameController.Win();
     }
 }

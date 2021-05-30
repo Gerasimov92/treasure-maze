@@ -8,16 +8,18 @@ public class GuardController : MonoBehaviour
     [SerializeField] private bool loopPath;
     [SerializeField] private List<Transform> points;
 
-    private NavMeshAgent _agent;
-    private int _currentPoint = 0;
-    private int _dir = 1;
+    [SerializeField] private Transform tempPoint;
 
+    private NavMeshAgent _agent;
+    private int _currentPointIndex = 0;
+    private int _dir = 1;
+    private bool _checkInProgress;
     void Start()
     {
         _agent = GetComponent<NavMeshAgent>();
 
         if (points.Count >= 2)
-            SetDestination(_currentPoint);
+            SetDestination(_currentPointIndex);
     }
 
     void Update()
@@ -25,28 +27,36 @@ public class GuardController : MonoBehaviour
         if (points.Count < 2) return;
         if (!IsDestinationReached()) return;
 
-        _currentPoint += _dir;
+        if (_checkInProgress)
+        {
+            _checkInProgress = false;
+            SetDestination(_currentPointIndex);
+            return;
+        }
+
+        _currentPointIndex += _dir;
+
         if (loopPath)
         {
             _dir = 1;
-            if (_currentPoint < 0 || _currentPoint >= points.Count)
-                _currentPoint = 0;
+            if (_currentPointIndex < 0 || _currentPointIndex >= points.Count)
+                _currentPointIndex = 0;
         }
         else
         {
-            if (_currentPoint >= points.Count)
+            if (_currentPointIndex >= points.Count)
             {
                 _dir = -1;
-                _currentPoint = points.Count - 2;
+                _currentPointIndex = points.Count - 2;
             }
-            else if (_currentPoint < 0)
+            else if (_currentPointIndex < 0)
             {
                 _dir = 1;
-                _currentPoint = 1;
+                _currentPointIndex = 1;
             }
         }
 
-        SetDestination(_currentPoint);
+        SetDestination(_currentPointIndex);
     }
 
     private bool IsDestinationReached()
@@ -61,5 +71,14 @@ public class GuardController : MonoBehaviour
     private void SetDestination(int pointIndex)
     {
         _agent.SetDestination(points[pointIndex].position);
+    }
+
+    [ContextMenu("CheckPoint")]
+    public void CheckPoint()
+    {
+        if (_checkInProgress) return;
+
+        _checkInProgress = true;
+        _agent.SetDestination(tempPoint.position);
     }
 }

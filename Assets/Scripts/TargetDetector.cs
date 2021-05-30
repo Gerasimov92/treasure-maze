@@ -10,11 +10,13 @@ public class TargetDetector : MonoBehaviour
     public float angle = 40;
     public Vector3 offset;
 
+    private GameController _gameController;
     private ITarget _target;
     private Transform _targetTransform;
 
     void Start()
     {
+        _gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         var obj = GameObject.FindGameObjectWithTag(targetTag);
         _target = obj.GetComponent<ITarget>();
         _targetTransform = obj.transform;
@@ -28,11 +30,7 @@ public class TargetDetector : MonoBehaviour
 
         if (Scan(scaledDistance))
         {
-            // Цель в поле зрения
-        }
-        else
-        {
-            // Цель не обнаружена
+            _gameController.Lose();
         }
     }
 
