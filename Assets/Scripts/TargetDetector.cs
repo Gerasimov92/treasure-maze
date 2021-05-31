@@ -18,12 +18,18 @@ public class TargetDetector : MonoBehaviour
     {
         _gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         var obj = GameObject.FindGameObjectWithTag(targetTag);
-        _target = obj.GetComponent<ITarget>();
-        _targetTransform = obj.transform;
+        if (obj)
+        {
+            _target = obj.GetComponent<ITarget>();
+            _targetTransform = obj.transform;
+        }
     }
 
     void FixedUpdate()
     {
+        if (_target == null)
+            return;
+
         var scaledDistance = _target.VisualDetectionDistance(maxDistance);
         if (Vector3.Distance(transform.position, _targetTransform.position) > scaledDistance)
             return;
