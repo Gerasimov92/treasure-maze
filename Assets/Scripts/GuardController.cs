@@ -10,12 +10,16 @@ public class GuardController : MonoBehaviour
 
     [SerializeField] private Transform tempPoint;
 
+    private static readonly int Speed = Animator.StringToHash("Speed");
+
+    private Animator _animator;
     private NavMeshAgent _agent;
     private int _currentPointIndex = 0;
     private int _dir = 1;
     private bool _checkInProgress;
     void Start()
     {
+        _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
 
         if (points.Count >= 2)
@@ -24,6 +28,8 @@ public class GuardController : MonoBehaviour
 
     void Update()
     {
+        _animator.SetFloat(Speed, _agent.velocity.magnitude);
+
         if (points.Count < 2) return;
         if (!IsDestinationReached()) return;
 

@@ -112,7 +112,7 @@ MonoBehaviour:
   turnSpeed: 10
   stealthSpeed: 1
   walkSpeed: 2
-  runSpeed: 8
+  runSpeed: 5
 --- !u!1001 &49576352153139881
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -210,6 +210,10 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: cd065016107bf6e47b54280b9b1cd61d, type: 2}
     - target: {fileID: 919132149155446097, guid: 056669cf32265de41a9e14b53ff52cee, type: 3}
       propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 056669cf32265de41a9e14b53ff52cee, type: 3}
+      propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 1090353403839895562, guid: 056669cf32265de41a9e14b53ff52cee, type: 3}
