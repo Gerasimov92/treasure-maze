@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,14 +9,15 @@ public class PlayerController : MonoBehaviour, ITarget
     [SerializeField] private GameObject body;
     [SerializeField] private GameObject camo;
 
-    private GameController _gameController;
+    private TreasureChest _treasureChest;
     private bool _isMoving;
     private bool _isHidden;
     private float _visualDetectionRatio = 1;
+    private bool _isTouchingTreasure;
 
     void Start()
     {
-        _gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+        _treasureChest = GameObject.FindGameObjectWithTag("Treasure").GetComponent<TreasureChest>();
     }
 
     private void OnMove(InputValue value)
@@ -31,6 +33,12 @@ public class PlayerController : MonoBehaviour, ITarget
             return;
 
         Hide(!_isHidden);
+    }
+
+    private void OnOpen(InputValue value)
+    {
+        if (_isTouchingTreasure)
+            _treasureChest.Open();
     }
 
     private void Hide(bool hidden)
@@ -49,6 +57,12 @@ public class PlayerController : MonoBehaviour, ITarget
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Treasure"))
-            _gameController.Win();
+            _isTouchingTreasure = true;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Treasure"))
+            _isTouchingTreasure = false;
     }
 }

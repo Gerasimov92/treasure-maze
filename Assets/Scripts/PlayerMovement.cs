@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
 
     private static readonly int Speed = Animator.StringToHash("Speed");
 
-    private CharacterController _controller;
+    private UnityEngine.CharacterController _controller;
     private Animator _animator;
     private Camera _mainCamera;
 
@@ -23,9 +23,11 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
-        _controller = GetComponent<CharacterController>();
+        _controller = GetComponent<UnityEngine.CharacterController>();
         _animator = GetComponent<Animator>();
         _mainCamera = Camera.main;
+
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
