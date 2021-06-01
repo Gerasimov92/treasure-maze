@@ -8,11 +8,13 @@ public class PlayerController : MonoBehaviour, ITarget
 {
     [SerializeField] private GameObject body;
     [SerializeField] private GameObject camo;
+    [SerializeField] private float hiddenRatio = 0.1f;
+    [SerializeField] private float stealthRatio = 0.5f;
 
     private TreasureChest _treasureChest;
     private bool _isMoving;
     private bool _isHidden;
-    private float _visualDetectionRatio = 1;
+    private bool _isStealth;
     private bool _isTouchingTreasure;
 
     void Start()
@@ -41,17 +43,25 @@ public class PlayerController : MonoBehaviour, ITarget
             _treasureChest.Open();
     }
 
+    private void OnStealth(InputValue value)
+    {
+        _isStealth = value.isPressed;
+    }
+
     private void Hide(bool hidden)
     {
         _isHidden = hidden;
         body.SetActive(!hidden);
         camo.SetActive(hidden);
-        _visualDetectionRatio = hidden ? 0.1f : 1.0f;
     }
 
     public float VisualDetectionDistance(float nominalDistance)
     {
-        return nominalDistance * _visualDetectionRatio;
+        var visualDetectionRatio = 1.0f;
+        if (_isHidden) visualDetectionRatio = hiddenRatio;
+        else if (_isStealth) visualDetectionRatio = stealthRatio;
+
+        return nominalDistance * visualDetectionRatio;
     }
 
     private void OnTriggerEnter(Collider other)
