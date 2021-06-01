@@ -11,16 +11,23 @@ public class GuardController : MonoBehaviour
     [SerializeField] private Transform tempPoint;
 
     private static readonly int Speed = Animator.StringToHash("Speed");
+    private static readonly int Attack = Animator.StringToHash("Attack");
 
     private Animator _animator;
     private NavMeshAgent _agent;
+    private TargetDetector _targetDetector;
+    private GameController _gameController;
+
     private int _currentPointIndex = 0;
     private int _dir = 1;
     private bool _checkInProgress;
+
     void Start()
     {
         _animator = GetComponent<Animator>();
         _agent = GetComponent<NavMeshAgent>();
+        _targetDetector = GetComponent<TargetDetector>();
+        _gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 
         if (points.Count >= 2)
             SetDestination(_currentPointIndex);
@@ -28,8 +35,41 @@ public class GuardController : MonoBehaviour
 
     void Update()
     {
-        _animator.SetFloat(Speed, _agent.velocity.magnitude);
+        if (_gameController.GameEnded)
+        {
+            _agent.SetDestination(transform.position);
+            _animator.SetFloat(Speed, 0);
+        }
+        else if (_targetDetector.Detected)
+        {
+            _agent.SetDestination(transform.position);
+            _animator.SetFloat(Speed, 0);
+            _animator.SetTrigger(Attack);
+            _gameController.Lose();
+        }
+        else
+        {
+            _animator.SetFloat(Speed, _agent.velocity.magnitude);
+            PathProcessing();
+        }
+    }
 
+    private bool IsDestinationReached()
+    {
+        var remainingDistance = _agent.remainingDistance;
+
+        return !float.IsPositiveInfinity(remainingDistance) &&
+               _agent.pathStatus == NavMeshPathStatus.PathComplete &&
+               Mathf.Approximately(remainingDistance, 0);
+    }
+
+    private void SetDestination(int pointIndex)
+    {
+        _agent.SetDestination(points[pointIndex].position);
+    }
+
+    private void PathProcessing()
+    {
         if (points.Count < 2) return;
         if (!IsDestinationReached()) return;
 
@@ -63,20 +103,6 @@ public class GuardController : MonoBehaviour
         }
 
         SetDestination(_currentPointIndex);
-    }
-
-    private bool IsDestinationReached()
-    {
-        var remainingDistance = _agent.remainingDistance;
-
-        return !float.IsPositiveInfinity(remainingDistance) &&
-               _agent.pathStatus == NavMeshPathStatus.PathComplete &&
-               Mathf.Approximately(remainingDistance, 0);
-    }
-
-    private void SetDestination(int pointIndex)
-    {
-        _agent.SetDestination(points[pointIndex].position);
     }
 
     [ContextMenu("CheckPoint")]

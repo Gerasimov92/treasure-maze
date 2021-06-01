@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class TargetDetector : MonoBehaviour
 {
-    public string targetTag = "Player";
-    public int rayCount = 6;
+    [SerializeField] private string targetTag = "Player";
+    [SerializeField] private Vector3 offset;
+    [SerializeField] private int rayCount = 6;
     public int maxDistance = 15;
     public float angle = 40;
-    public Vector3 offset;
 
-    private GameController _gameController;
+    public bool Detected { get; private set; }
+
     private ITarget _target;
     private Transform _targetTransform;
 
     void Start()
     {
-        _gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
         var obj = GameObject.FindGameObjectWithTag(targetTag);
         if (obj)
         {
@@ -36,7 +36,7 @@ public class TargetDetector : MonoBehaviour
 
         if (Scan(scaledDistance))
         {
-            _gameController.Lose();
+            Detected = true;
         }
     }
 
