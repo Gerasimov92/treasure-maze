@@ -43,7 +43,7 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 896577773640206328}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
+  m_Avatar: {fileID: 9000000, guid: 056669cf32265de41a9e14b53ff52cee, type: 3}
   m_Controller: {fileID: 9100000, guid: bf1282008dfa74c469dc2f00544fc282, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 1
@@ -69,8 +69,8 @@ MonoBehaviour:
   camo: {fileID: 4321289161179536158}
   hiddenRatio: 0.1
   stealthRatio: 0.5
-  throwPoint: {fileID: 0}
-  projectile: {fileID: 0}
+  throwPoint: {fileID: 4981065002599550744}
+  projectile: {fileID: 1134149438981705311, guid: 3266b31c6593fb84389c9a35a5053521, type: 3}
 --- !u!114 &1411294754
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,6 +117,7 @@ MonoBehaviour:
   stealthSpeed: 1
   walkSpeed: 2
   runSpeed: 5
+  aimCamera: {fileID: 0}
 --- !u!1 &3692674837339753204
 GameObject:
   m_ObjectHideFlags: 0

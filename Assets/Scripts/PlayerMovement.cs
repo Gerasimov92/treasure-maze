@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float stealthSpeed = 1;
     [SerializeField] private float walkSpeed = 5;
     [SerializeField] private float runSpeed = 7;
+    [SerializeField] private CinemachineVirtualCamera aimCamera;
 
     private static readonly int Speed = Animator.StringToHash("Speed");
 
@@ -20,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 _moveVector;
     private bool _isRunning;
     private bool _isStealth;
+    private bool _isAiming;
 
     void Start()
     {
@@ -32,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (_isAiming) UpdateRotation(_mainCamera.transform.forward);
         Move(_moveVector);
     }
 
@@ -48,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
 
         var targetDirection = CalcTargetDirection(input).normalized;
 
-        UpdateRotation(targetDirection);
+        if (!_isAiming) UpdateRotation(targetDirection);
 
         targetDirection *= _moveSpeed;
         _controller.Move(targetDirection * Time.deltaTime);
@@ -110,5 +114,11 @@ public class PlayerMovement : MonoBehaviour
     private void OnStealth(InputValue value)
     {
         _isStealth = value.isPressed;
+    }
+
+    private void OnAim(InputValue value)
+    {
+        _isAiming = value.isPressed;
+        aimCamera.Priority += _isAiming ? 100 : -100;
     }
 }

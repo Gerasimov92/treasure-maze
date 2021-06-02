@@ -22,6 +22,7 @@ public class PlayerController : MonoBehaviour, ITarget
     private bool _isMoving;
     private bool _isHidden;
     private bool _isStealth;
+    private bool _isAiming;
     private bool _isTouchingTreasure;
     private int _attackLayerIndex;
 
@@ -53,7 +54,9 @@ public class PlayerController : MonoBehaviour, ITarget
         var newProjectile = Instantiate(projectile);
         newProjectile.transform.position = throwPoint.position;
         newProjectile.transform.rotation = Random.rotation;
-        newProjectile.GetComponent<Rigidbody>().AddForce(transform.forward * 2.5f, ForceMode.Impulse);
+        var direction = Camera.main.transform.forward;
+        //newProjectile.GetComponent<Rigidbody>().AddForce(transform.forward * 2.5f, ForceMode.Impulse);
+        newProjectile.GetComponent<Rigidbody>().AddForce(direction * 4f, ForceMode.Impulse);
     }
 
     private void OnMove(InputValue value)
@@ -84,7 +87,12 @@ public class PlayerController : MonoBehaviour, ITarget
 
     private void OnFire(InputValue value)
     {
-        StartCoroutine(AttackAnimation());
+        if (_isAiming) StartCoroutine(AttackAnimation());
+    }
+
+    private void OnAim(InputValue value)
+    {
+        _isAiming = value.isPressed;
     }
 
     private void AttackEnd()
