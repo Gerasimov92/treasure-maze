@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour, ITarget
 {
@@ -10,8 +11,14 @@ public class PlayerController : MonoBehaviour, ITarget
     [SerializeField] private GameObject camo;
     [SerializeField] private float hiddenRatio = 0.1f;
     [SerializeField] private float stealthRatio = 0.5f;
+    [SerializeField] private Transform throwPoint;
+    [SerializeField] private GameObject projectile;
 
+    private static readonly int Attack = Animator.StringToHash("Attack");
+
+    private Animator _animator;
     private TreasureChest _treasureChest;
+
     private bool _isMoving;
     private bool _isHidden;
     private bool _isStealth;
@@ -19,7 +26,32 @@ public class PlayerController : MonoBehaviour, ITarget
 
     void Start()
     {
+        _animator = GetComponent<Animator>();
         _treasureChest = GameObject.FindGameObjectWithTag("Treasure").GetComponent<TreasureChest>();
+    }
+
+    public float VisualDetectionDistance(float nominalDistance)
+    {
+        var visualDetectionRatio = 1.0f;
+        if (_isHidden) visualDetectionRatio = hiddenRatio;
+        else if (_isStealth) visualDetectionRatio = stealthRatio;
+
+        return nominalDistance * visualDetectionRatio;
+    }
+
+    private void Hide(bool hidden)
+    {
+        _isHidden = hidden;
+        body.SetActive(!hidden);
+        camo.SetActive(hidden);
+    }
+
+    private void Fire()
+    {
+        var newProjectile = Instantiate(projectile);
+        newProjectile.transform.position = throwPoint.position;
+        newProjectile.transform.rotation = Random.rotation;
+        newProjectile.GetComponent<Rigidbody>().AddForce(transform.forward * 2, ForceMode.Impulse);
     }
 
     private void OnMove(InputValue value)
@@ -48,20 +80,14 @@ public class PlayerController : MonoBehaviour, ITarget
         _isStealth = value.isPressed;
     }
 
-    private void Hide(bool hidden)
+    private void OnFire(InputValue value)
     {
-        _isHidden = hidden;
-        body.SetActive(!hidden);
-        camo.SetActive(hidden);
+        _animator.SetTrigger(Attack);
     }
 
-    public float VisualDetectionDistance(float nominalDistance)
+    private void AttackEnd()
     {
-        var visualDetectionRatio = 1.0f;
-        if (_isHidden) visualDetectionRatio = hiddenRatio;
-        else if (_isStealth) visualDetectionRatio = stealthRatio;
-
-        return nominalDistance * visualDetectionRatio;
+        Fire();
     }
 
     private void OnTriggerEnter(Collider other)
