@@ -5,12 +5,16 @@ public class GameController : MonoBehaviour
 
     public void Win()
     {
+        if (GameEnded) return;
+
         GameEnded = true;
         Debug.Log("Win");
     }
 
     public void Lose()
     {
+        if (GameEnded) return;
+
         GameEnded = true;
         Debug.Log("Lose");
     }
