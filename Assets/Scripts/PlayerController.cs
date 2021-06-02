@@ -23,10 +23,12 @@ public class PlayerController : MonoBehaviour, ITarget
     private bool _isHidden;
     private bool _isStealth;
     private bool _isTouchingTreasure;
+    private int _attackLayerIndex;
 
     void Start()
     {
         _animator = GetComponent<Animator>();
+        _attackLayerIndex = _animator.GetLayerIndex("Attack Layer");
         _treasureChest = GameObject.FindGameObjectWithTag("Treasure").GetComponent<TreasureChest>();
     }
 
@@ -82,12 +84,22 @@ public class PlayerController : MonoBehaviour, ITarget
 
     private void OnFire(InputValue value)
     {
-        _animator.SetTrigger(Attack);
+        StartCoroutine(AttackAnimation());
     }
 
     private void AttackEnd()
     {
         Fire();
+    }
+
+    private IEnumerator AttackAnimation()
+    {
+        _animator.SetLayerWeight(_attackLayerIndex, 1);
+        _animator.SetTrigger(Attack);
+
+        yield return new WaitForSeconds(1);
+
+        _animator.SetLayerWeight(_attackLayerIndex, 0);
     }
 
     private void OnTriggerEnter(Collider other)
