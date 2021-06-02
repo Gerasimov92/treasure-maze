@@ -18,19 +18,19 @@ public class PlayerController : MonoBehaviour, ITarget
 
     private Animator _animator;
     private TreasureChest _treasureChest;
+    private Camera _mainCamera;
 
     private bool _isMoving;
     private bool _isHidden;
     private bool _isStealth;
     private bool _isAiming;
     private bool _isTouchingTreasure;
-    private int _attackLayerIndex;
 
     void Start()
     {
         _animator = GetComponent<Animator>();
-        _attackLayerIndex = _animator.GetLayerIndex("Attack Layer");
         _treasureChest = GameObject.FindGameObjectWithTag("Treasure").GetComponent<TreasureChest>();
+        _mainCamera = Camera.main;
     }
 
     public float VisualDetectionDistance(float nominalDistance)
@@ -54,8 +54,7 @@ public class PlayerController : MonoBehaviour, ITarget
         var newProjectile = Instantiate(projectile);
         newProjectile.transform.position = throwPoint.position;
         newProjectile.transform.rotation = Random.rotation;
-        var direction = Camera.main.transform.forward;
-        //newProjectile.GetComponent<Rigidbody>().AddForce(transform.forward * 2.5f, ForceMode.Impulse);
+        var direction = _mainCamera.transform.forward;
         newProjectile.GetComponent<Rigidbody>().AddForce(direction * 4f, ForceMode.Impulse);
     }
 
@@ -87,7 +86,7 @@ public class PlayerController : MonoBehaviour, ITarget
 
     private void OnFire(InputValue value)
     {
-        if (_isAiming) StartCoroutine(AttackAnimation());
+        if (_isAiming) _animator.SetTrigger(Attack);
     }
 
     private void OnAim(InputValue value)
@@ -98,16 +97,6 @@ public class PlayerController : MonoBehaviour, ITarget
     private void AttackEnd()
     {
         Fire();
-    }
-
-    private IEnumerator AttackAnimation()
-    {
-        _animator.SetLayerWeight(_attackLayerIndex, 1);
-        _animator.SetTrigger(Attack);
-
-        yield return new WaitForSeconds(1);
-
-        _animator.SetLayerWeight(_attackLayerIndex, 0);
     }
 
     private void OnTriggerEnter(Collider other)
