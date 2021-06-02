@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour, ITarget
         var newProjectile = Instantiate(projectile);
         newProjectile.transform.position = throwPoint.position;
         newProjectile.transform.rotation = Random.rotation;
-        newProjectile.GetComponent<Rigidbody>().AddForce(transform.forward * 2, ForceMode.Impulse);
+        newProjectile.GetComponent<Rigidbody>().AddForce(transform.forward * 2.5f, ForceMode.Impulse);
     }
 
     private void OnMove(InputValue value)

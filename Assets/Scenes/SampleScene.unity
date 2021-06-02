@@ -890,6 +890,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6643475634468076499, guid: cd649b00e6ac81849a0ed956ccf6e707, type: 3}
+      propertyPath: m_VerticalAxis.m_MaxSpeed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6643475634468076499, guid: cd649b00e6ac81849a0ed956ccf6e707, type: 3}
+      propertyPath: m_HorizontalAxis.m_MaxSpeed
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 6643475634468076499, guid: cd649b00e6ac81849a0ed956ccf6e707, type: 3}
+      propertyPath: m_HorizontalAxis.m_AccelTime
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6643475634468076499, guid: cd649b00e6ac81849a0ed956ccf6e707, type: 3}
+      propertyPath: m_HorizontalAxis.m_DecelTime
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 6643475635604504392, guid: cd649b00e6ac81849a0ed956ccf6e707, type: 3}
       propertyPath: m_Name
       value: StandardCamera
